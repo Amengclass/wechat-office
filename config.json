@@ -1,0 +1,15 @@
+{
+  "wechat": {
+    "AppID": "",
+    "AppSecret": ""
+  },
+  "weather": {
+    "gd_key": "",
+    "hf_key": ""
+  },
+  "template": {
+    "touser": "",
+    "template_id": "",
+    "url": ""
+  }
+}
