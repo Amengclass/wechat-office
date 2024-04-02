@@ -172,7 +172,7 @@ if __name__ == '__main__':
     rainbow_text = get_rainbow()
 
     # 要推送的用户
-    touser = config["template"]["touser"][2]
+    touser = config["template"]["touser"]
     # send_message(touser, token, info, rainbow_text)
     # 循环推送
     for i in touser:
