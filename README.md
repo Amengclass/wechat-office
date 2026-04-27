@@ -12,7 +12,7 @@
 
 ## 如何使用
 
-1. **克隆仓库：** `git clone https://github.com/yourusername/douyin-couple-weather.git`
+1. **克隆仓库：** `git clone https://github.com/Amengclass/wechat-office.git`
 2. **安装依赖：** 使用 `pip install -r requirements.txt` 安装所需的 Python 包。
 3. **配置参数：** 在 `config.json` 文件中填写相关信息，如微信公众号的 AppID、AppSecret、模板ID 等。
 4. **运行程序：** 执行 `python tianqi.py` 开始发送模板消息给用户。
