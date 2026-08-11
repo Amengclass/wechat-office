@@ -1,670 +1,314 @@
-## wecat公众号推送模板
+<div align="center">
 
-​	最近在社交媒体上热传的情侣天气推送项目，使用 Python 编写了一个可定制化的模板消息发送功能。这个项目不仅能够发送天气信息，还通过整合免费 API 实现了发送更多有趣的内容，如每日星座运势、搞笑段子等。
+# 💌 WeChat Office
 
-## 主要功能
+> 用 Python 写的微信公众号模板消息推送工具 —— 每天定时给 TA 推送天气、每日一言和星座运势。
 
-- **天气信息推送：** 通过调用天气 API 获取实时的天气情况，并以模板消息的形式发送给用户。
-- **自定义内容：** 利用免费的 API 获取各种有趣的内容，例如每日星座运势、搞笑段子等，并与天气信息一起发送给用户。
-- **灵活配置：** 用户可以根据自己的需求灵活配置模板消息的内容，包括天气、星座运势、段子等。
+**中文** | [English](README_EN.md)
 
+[![Stars](https://img.shields.io/github/stars/Amengclass/wechat-office?style=social)](https://github.com/Amengclass/wechat-office/stargazers)
+[![Last Commit](https://img.shields.io/github/last-commit/Amengclass/wechat-office?color=blue)](https://github.com/Amengclass/wechat-office/commits/master)
+[![Built with](https://img.shields.io/badge/built%20with-Python-3776AB.svg)](https://www.python.org/)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)](https://www.python.org/downloads/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/Amengclass/wechat-office/pulls)
 
+</div>
 
-## 如何使用
+## ✨ 特性
 
-1. **克隆仓库：** `git clone https://github.com/Amengclass/wechat-office.git`
-2. **安装依赖：** 使用 `pip install -r requirements.txt` 安装所需的 Python 包。
-3. **配置参数：** 在 `config.json` 文件中填写相关信息，如微信公众号的 AppID、AppSecret、模板ID 等。
-4. **运行程序：** 执行 `python tianqi.py` 开始发送模板消息给用户。
+- **天气推送** — 通过高德 + 和风双天气 API 获取实时天气，以模板消息形式发送到公众号
+- **每日一言** — 集成免费 hitokoto API，每天推送一句彩虹屁 / 名言
+- **可定制模板** — 模板内容完全由你定义，支持 emoji，随你发挥
+- **灵活配置** — 所有参数集中在 `config.json`，改配置即可换城市、换模板、换推送对象
+- **免费自动推送** — 提供 PythonAnywhere 免费托管教程，每天定时自动推送
+- **多用户支持** — `touser` 支持数组，一条脚本推送给多个人
 
+## 🖼️ 效果预览
 
+| `test.py`（测试推送） | `tianqi.py`（天气推送） |
+| :---: | :---: |
+| <img src="./img/5.jpg" width="70%"> | <img src="./img/6.jpg" width="70%"> |
 
-## 贡献者
+## 🚀 快速开始
 
-- [Amengclass (剑姬同学)](https://github.com/Amengclass)
-- [其他贡献者](https://github.com/yourusername/douyin-couple-weather/contributors)
+1. **克隆仓库**并进入目录：
 
-## 反馈与建议
+   ```bash
+   git clone https://github.com/Amengclass/wechat-office.git
+   cd wechat-office
+   ```
 
-如果您有任何问题、建议或者发现了 bug，请随时提出 [Issues](https://github.com/Amengclass/wechat-office/issues)，我们会尽快处理。感谢您的贡献！
+2. **安装依赖**（本仓库仅依赖 `requests`）：
 
+   ```bash
+   pip install requests
+   ```
 
+3. **配置参数**：编辑 `config.json`，填入微信公众号测试号的 AppID、AppSecret、模板 ID，以及天气 API Key（获取方式见[详细教程](#-详细教程)）
 
+4. **运行推送**：
 
+   ```bash
+   python tianqi.py
+   ```
 
-## 使用详细教程
+   推送成功会输出红色 `推送成功` 提示。默认推送城市为**北京**，在 `tianqi.py` 中把 `location="北京"` 改成你自己的城市即可。
 
-#### 首先访问 https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login
+## ⚙️ 配置说明
 
-登录后台得到appID 和 appsecret  分别填入`config.json文件`中
-![image](https://user-images.githubusercontent.com/110412182/186095663-3146adbf-a6e3-4e55-8add-41079d77b870.png)
+所有配置都在 `config.json` 中：
 
-修改到这个部分
-
-<img src="./img/0.png" alt="0" style="zoom: 80%;" />
-
-
-
-### test.py 测试用的
-
-可以收到通知，自定义内容
-
-
-#### 1、新建的模板 (用于test.py)
-
+```json
+{
+  "wechat": {
+    "AppID": "",
+    "AppSecret": "",
+    "access_token": ""
+  },
+  "weather": {
+    "gd_key": "",
+    "hf_key": ""
+  },
+  "template": {
+    "touser": [""],
+    "template_id": ""
+  }
+}
 ```
+
+| 字段 | 说明 |
+| --- | --- |
+| `wechat.AppID` | 微信测试号 AppID（[测试号申请入口](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login)） |
+| `wechat.AppSecret` | 微信测试号 AppSecret |
+| `wechat.access_token` | 运行后自动写入，无需手动填写 |
+| `weather.gd_key` | 高德天气 API Key（[申请入口](https://console.amap.com/dev/index)） |
+| `weather.hf_key` | 和风天气 API Key（[申请入口](https://id.qweather.com/)） |
+| `template.touser` | 接收推送的用户 openid（数组，可填多个） |
+| `template.template_id` | 微信后台新建的模板 ID |
+
+> ⚠️ 注意：上方 JSON 是**合法可解析**的版本。请勿在 JSON 中写 `#` 注释，否则程序会解析失败。
+
+## 📖 详细教程
+
+### 1️⃣ 获取微信测试号 AppID / AppSecret
+
+访问 [微信公众平台测试号](https://mp.weixin.qq.com/debug/cgi-bin/sandbox?t=sandbox/login) 并扫码登录，在页面上获取 `appID` 和 `appsecret`：
+
+![微信测试号后台](https://user-images.githubusercontent.com/110412182/186095663-3146adbf-a6e3-4e55-8add-41079d77b870.png)
+
+把它们填入 `config.json` 的对应位置：
+
+<img src="./img/0.png" alt="修改config.json" width="80%">
+
+### 2️⃣ 新建模板 & 运行 test.py（测试用）
+
+在微信后台「新增测试模板」，模板内容按下面字段新建（`test.py` 使用）：
+
+```text
 测试1：{{date.DATA}}
-测试2：{{city.DATA}} 
-测试3：{{weather_now.DATA}} 
+测试2：{{city.DATA}}
+测试3：{{weather_now.DATA}}
 测试4：{{temprature_now.DATA}}
 测试5：{{temprature_today.DATA}}
 测试6：{{win.DATA}}
 测试7：{{rainbow.DATA}}
 ```
 
-<img src="./img/1.png" alt="1" style="zoom: 50%;" />
+<img src="./img/1.png" alt="新建测试模板" width="60%">
 
-添加成功后如图：将模版ID复制下来
+添加成功后，将模板 ID 复制下来：
 
-<img src="./img/2.png" alt="2" style="zoom:50%;" />
+<img src="./img/2.png" alt="模板ID" width="60%">
 
-然后修改进到`config.json`里
+把模板 ID 填进 `config.json`：
 
-<img src="./img/3.png" alt="3" style="zoom:50%;" />
+<img src="./img/3.png" alt="填写模板ID" width="60%">
 
-写到这；扫二维码关注后可以看见多了用户的微信号信息，放到上边的`touser`里就好。
-<img src="./img/4.png" alt="4" style="zoom:50%;" />
+扫码关注测试号后，后台会显示用户的微信号信息，把用户 openid 填到 `touser` 里：
 
-#### 2、运行
+<img src="./img/4.png" alt="获取用户openid" width="60%">
 
-请确认`config.json`的以下部分被填写了
+确认配置无误后运行：
 
-```json
- #这是微信注册号
-  "wechat": { 
-    "AppID": "",   #这里填微信测试号的appId
-    "AppSecret": "" #这里填微信测试号的appsecret
-  },
-#这里是配置的模版部分
-  "template": {
-    "touser": "",   #这里填推送用户id
-    "template_id": "", #这里填模板id
-    "url": "" #这里填点击模板想要跳转到界面，例如www.baidu.com
-  }
+```bash
+python test.py
 ```
 
+收到推送即配置正确，效果预览见上方表格。
 
+### 3️⃣ 天气推送 tianqi.py
 
-#### 3、效果
+新建天气模板并替换模板 ID，模板内容如下（可自由发挥加 emoji ʕ•ᴥ•ʔ）：
 
-<img src="./img/5.jpg" alt="5" style="zoom:50%;" />
-
-
-
-
-
-### tianqi.py  天气推送
-
-效果图
-
-<img src="./img/6.jpg" alt="6" style="zoom:50%;" />
-
-别的功能大家酌情增加吧
-
-同上，新建模板然后替换模板id   ʕ•ᴥ•ʔ
-
-##### 模版
-
-```python
+```text
 🗓️今天是{{date.DATA}} o(〃'▽'〃)o
 🏙️城市：{{city.DATA}} ヾ(≧▽≦*)o
-🎈凤向：{{win.DATA}}╰(*°▽°*)╯
+🎈风向：{{win.DATA}}╰(*°▽°*)╯
 ⛅️今日天气(❁´◡`❁)
 	 描述:{{weather_text.DATA}}
-     当前：{{weather_now.DATA}} 
-     白天：{{weather_day.DATA}} 
-     夜晚：{{weather_night.DATA}} 
+     当前：{{weather_now.DATA}}
+     白天：{{weather_day.DATA}}
+     夜晚：{{weather_night.DATA}}
 🌡️温度：{{temprature_now.DATA}}
    范围：{{temprature_today.DATA}}
 
 每日一言：🌈{{rainbow.DATA}}🌈
 ```
 
+天气数据来自高德和风两个免费 API，需要分别申请 Key，申请方式见下一步。运行：
 
-
-这里用到天气的api，所以需要申请相关的key配置一下
-
-##### [高德天气(点击跳转)](https://console.amap.com/dev/index)
-
-###### 注册登录
-
-<img src="./img/7.png" alt="7" style="zoom: 33%;" />
-
-###### 然后创建key即可
-
-<img src="./img/8.png" alt="8" style="zoom: 50%;" />
-
-把这个key复制下来，修改进`config.json`文件里
-
-<img src="./img/10.png" alt="10" style="zoom: 80%;" />
-
-
-
-##### [和风天气(点击跳转)](https://id.qweather.com/#/login?redirect=https%3A%2F%2Fconsole.qweather.com)
-
-###### 注册登录
-
-<img src="./img/11.png" alt="11" style="zoom:80%;" />
-
-###### 然后添加key
-
-<img src="./img/12.png" alt="12" style="zoom:50%;" />
-
-<img src="./img/13.png" alt="13" style="zoom: 60%;" />
-
-同样的把这个key复制下来替换进`config.json`中
-
-<img src="./img/14.png" alt="14" style="zoom:50%;" />
-
-<img src="./img/15.png" alt="15" style="zoom: 67%;" />
-
-也就是`添加了两个key`
-
-运行 tianqi.py 即可
-
-```
+```bash
 python tianqi.py
 ```
 
-### config.json修改说明
+效果预览见上方表格。
 
-```json
-{#这是微信注册号
-    "wechat": {
-        "AppID": "",
-        "AppSecret": "",#这里填微信测试号的appId
-        "access_token": ""#这里填微信测试号的appsecret
-    },
-    "weather": {
-        "gd_key": "",#这里填高德天气key
-        "hf_key": ""#这里填和风天气key
-    },
-    "template": {
-        "touser": [
-            "",
-            ""
-        ],#这里填推送用户id
-        "template_id": ""#这里填模板id
-    }
-}
-```
+### 4️⃣ 申请天气 API Key
 
+#### 高德天气
 
+注册登录 [高德开放平台](https://console.amap.com/dev/index)：
 
-### 免费服务器托管自动运行：每天自动推送
+<img src="./img/7.png" alt="高德注册登录" width="40%">
 
-#### 1、[点击打开pythonanywhere](https://www.pythonanywhere.com/)![16](./img/16.png)
+创建 Key（选择 Web 服务类型即可）：
 
-#### 2、点击进行注册
+<img src="./img/8.png" alt="高德创建Key" width="60%">
 
-<img src="./img/18.png" alt="18" style="zoom: 67%;" />
+把 Key 复制下来，填进 `config.json` 的 `gd_key`：
 
-#### 3、注册成功后的界面
+<img src="./img/10.png" alt="填写高德Key" width="80%">
 
-<img src="./img/19.png" alt="19" style="zoom:67%;" />
+#### 和风天气
 
-如果看不懂英文，就将页面转为中文即可
+注册登录 [和风天气控制台](https://id.qweather.com/)：
 
-选择右上角的`Files`
+<img src="./img/11.png" alt="和风注册登录" width="80%">
 
-<img src="./img/20.png" alt="20" style="zoom:50%;" />
+添加 Key：
 
+<img src="./img/12.png" alt="和风添加Key" width="60%">
 
+<img src="./img/13.png" alt="和风Key详情" width="60%">
 
-#### 4、新建文件夹
+把 Key 复制下来填进 `config.json` 的 `hf_key`：
 
-​	我这里叫做	`wechat`(随便起什么名字都可以)，然后点击`New directory`
+<img src="./img/14.png" alt="填写和风Key" width="60%">
 
-<img src="./img/21.png" alt="21" style="zoom: 67%;" />
+<img src="./img/15.png" alt="两个Key都填好" width="67%">
 
+两个 Key 都填好后，运行 `python tianqi.py` 即可收到天气推送。
 
+### 5️⃣ 免费服务器托管：每天自动推送
 
-#### 5、点击上传文件
+用免费的 [PythonAnywhere](https://www.pythonanywhere.com/) 托管，实现每天定时自动推送：
 
-选择`config.json`和`tianqi.py`文件进行上传
+<img src="./img/16.png" alt="PythonAnywhere官网" width="80%">
 
-<img src="./img/22.png" alt="22" style="zoom: 67%;" /><img src="./img/23.png" alt="23" style="zoom:80%;" />
+**① 注册账号**
 
-#### 6、试运行
+点击注册：
 
-​	双击`tianqi.py`文件，试运行，确保配置正确
+<img src="./img/18.png" alt="PythonAnywhere注册" width="67%">
 
-![25](./img/25.png)
+注册成功后的界面（看不懂英文可在页面切换为中文）：
 
-如果到这里都没有问题，说明配置都已经正确，接下来我们设定定时任务自动运行
+<img src="./img/19.png" alt="注册成功界面" width="67%">
 
-返回到主页，选择`Tasks`
+**② 新建文件夹**
 
-![26](./img/26.png)
+选择右上角 `Files`，新建文件夹（名字随意，示例叫 `wechat`）：
 
+<img src="./img/20.png" alt="Files入口" width="60%">
 
+<img src="./img/21.png" alt="新建文件夹" width="67%">
 
-#### 7、然后添加一个定时任务![27](./img/27.png)
+**③ 上传文件**
 
-- [ ] 首先时间：
+把 `config.json` 和 `tianqi.py` 上传到该文件夹：
 
-​		与北京时间有8小时时差，自己算即可，如果你是想中午12点推送，那么12-8＝4，所以你就设定4:00 utc即可
+<img src="./img/22.png" alt="上传文件" width="67%">
 
-- [ ] 其次是Command or path to script(eg./home/yourusername/yourscrip.py）
+<img src="./img/23.png" alt="上传文件2" width="80%">
 
-  ```python
-  cd /home/xhf/wechat && python tianqi.py
-  ```
+**④ 试运行**
 
-其中`/home/xhf/wechat`是我之前上传到的文件夹路径，怎么看呢？
+双击 `tianqi.py` 试运行，确保配置正确：
 
-你只需要打开你存储py文件的那个文件夹，然后复制左上角即可，如果你的存储文件夹名称和我一样是`wechat`，那么你只需修改xhf为你的账户名称即可
+<img src="./img/25.png" alt="试运行" width="80%">
 
-<img src="./img/28.png" alt="28" style="zoom: 67%;" />
+确认无误后，回到主页选择 `Tasks`：
 
-- [ ] 最后Optional description
+<img src="./img/26.png" alt="Tasks入口" width="80%">
 
- 随便填写什么任务描述都可以
+**⑤ 添加定时任务**
 
+<img src="./img/27.png" alt="添加定时任务" width="80%">
 
+- **时间**：PythonAnywhere 使用 UTC 时间，与北京时间差 8 小时。想中午 12 点推送就填 `4:00`（12 − 8 = 4）
+- **命令**：`cd /home/你的用户名/wechat && python tianqi.py`
+- **描述**：随意填写任务描述
 
-如图，就配置好了自动任务，我的在每天的早上7点，就会运行，推送消息了
+查看你的文件夹路径：打开存放脚本的文件夹，复制左上角路径即可。如果文件夹名也叫 `wechat`，只需把路径中的用户名换成你的账号名：
 
-![29](./img/29.png)
+<img src="./img/28.png" alt="查看文件夹路径" width="67%">
 
-### 附录
+配置完成后，每天到点就会自动运行推送了（下图是配置好早上 7 点任务的示例）：
 
-#### test.py代码
+<img src="./img/29.png" alt="定时任务配置完成" width="80%">
+
+## ❓ FAQ
+
+<details>
+<summary>运行后收不到推送，怎么办？</summary>
+
+按顺序检查：
+
+1. `touser` 必须是**扫码关注测试号后**显示的用户 openid，不是微信号；
+2. `template_id` 是否与后台新建的模板完全一致；
+3. 天气 Key（`gd_key` / `hf_key`）是否申请成功且类型正确；
+4. 首次运行需联网获取 `access_token`，查看终端是否输出 `推送成功`（红色）。
+</details>
+
+<details>
+<summary>高德 / 和风天气 API 收费吗？</summary>
+
+个人开发者均可免费申请，本教程用的就是免费额度，足够日常使用。
+</details>
+
+<details>
+<summary>PythonAnywhere 上定时任务的时间为什么不对？</summary>
+
+平台使用 UTC 时间，配置时间 = 北京时间 − 8 小时。例如北京时间 12:00 推送，就填 `4:00`。
+</details>
+
+<details>
+<summary>怎么同时推送给多个人？</summary>
+
+`touser` 填多个 openid，并在 `tianqi.py` 末尾取消注释 for 循环即可：
 
 ```python
-# -*- coding: utf-8 -*-
-# @Author: xhf
-# @Date:   2024.4.1
+for i in touser:
+    send_message(i, token, info, rainbow_text)
+```
+</details>
 
-import requests
-import json
-import os
+## 📁 项目结构
 
-config_path = os.path.join(os.path.dirname(__file__), "config.json")
-
-# 从config.json中读取配置信息
-def read_config():
-    """
-       读取配置文件并返回配置内容。
-
-       Returns:
-           dict: 包含配置信息的字典对象，如果文件不存在或解析失败，则返回空字典。
-       """
-    with open(config_path, 'r', encoding='utf-8') as file:
-        return json.load(file)
-
-def updata_config():
-    """
-       将配置信息写入配置文件。
-
-       Args:
-           config_path (str): 配置文件路径。
-       """
-    with open(config_path, 'w', encoding='utf-8') as file:
-        json.dump(config, file, indent=4, ensure_ascii=False)
-
-config = read_config()
-
-# 从微信 API 获取访问令牌的函数
-def get_stable_token(AppID=config["wechat"]["AppID"], AppSecret=config["wechat"]["AppSecret"]):
-    """
-            获取微信 access_token。
-
-            Args:
-                AppID (str): 微信应用的 AppID。
-                AppSecret (str): 微信应用的 AppSecret。
-
-            Returns:
-                str: 获取到的 access_token。
-            """
-    url = "https://api.weixin.qq.com/cgi-bin/stable_token?"
-    data = \
-        {
-            "grant_type": "client_credential",
-            "appid": AppID,
-            "secret": AppSecret
-        }
-    data = json.dumps(data)
-    response = requests.post(url, data=data)
-
-    res = response.json()
-    print(res)
-    # 更新配置文件
-    access_token = res["access_token"]
-    config["wechat"]["access_token"] = access_token
-
-    updata_config()
-    return access_token
-
-
-# 发送消息
-def send_message(touser, token, info=None, rainbow_text=None):
-    """
-        发送消息。
-        Args:
-            touser (str): 接收消息的用户 openid。
-            token (str): 微信 access_token。
-            info (dict): 包含天气信息的字典。
-            rainbow_text (str): 彩虹屁文本。
-    """
-    url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={0}'.format(token)
-    data = {
-        "touser": touser,
-        "template_id": config["template"]["template_id"],
-        # "url": info['link'],
-        "topcolor": "#FF0000",
-        "data": {
-            "date": {
-                "value": "你好",
-                "color": "#000"
-            },
-            "city": {
-                "value": "没问题",
-                "color": "#000"
-            },
-            "weather_now": {
-                "value": "我的测试",
-                "color": "#000"
-            },
-            "temprature_now": {
-                "value": "太多了吧",
-                "color": "#000"
-            },
-            "temprature_today": {
-                "value": "啦啦啦啦",
-                "color": "#000"
-            },
-            "win": {
-                "value": "sdfsf",
-                "color": "#000"
-            },
-            "rainbow": {
-                "value": "sfsdf",
-                "color": "#000"
-            }
-        }
-    }
-    response = requests.post(url=url, data=json.dumps(data))
-    if response.json()['errmsg'] == 'ok':
-        print('\033[91m' + '推送成功' + '\033[0m')  # 输出红色文字
-    else:
-        print('\033[91m' + '推送失败' + '\033[0m')  # 输出红色文字
-
-
-if __name__ == '__main__':
-    token = get_stable_token(config["wechat"]["AppID"], config["wechat"]["AppSecret"])
-    # 要推送的用户
-    touser = config["template"]["touser"][0]
-    send_message(touser, token)
+```text
+wechat-office/
+├── config.json   # 配置文件（AppID / 天气Key / 模板ID）
+├── tianqi.py     # 天气推送主程序（高德 + 和风双API）
+├── test.py       # 测试程序（不依赖天气API，验证模板消息通）
+└── img/          # README 教程截图
 ```
 
+> 依赖仅 `requests`，直接 `pip install requests` 即可（无需 requirements.txt）。
 
+## 🤝 贡献
 
-#### tianqi.py代码
+欢迎提交 [Issues](https://github.com/Amengclass/wechat-office/issues) 反馈问题，也欢迎 [Pull Requests](https://github.com/Amengclass/wechat-office/pulls) 贡献代码。
 
-```python
-# -*- coding: utf-8 -*-
-# @Author: xhf
-# @Date:   2024.4.1
+## 📄 License
 
-import requests
-import json
-import os
-
-config_path = os.path.join(os.path.dirname(__file__), "config.json")
-
-# 从config.json中读取配置信息
-def read_config():
-    """
-       读取配置文件并返回配置内容。
-
-       Returns:
-           dict: 包含配置信息的字典对象，如果文件不存在或解析失败，则返回空字典。
-       """
-    with open(config_path, 'r', encoding='utf-8') as file:
-        return json.load(file)
-
-def updata_config():
-    """
-       将配置信息写入配置文件。
-
-       Args:
-           config_path (str): 配置文件路径。
-       """
-    with open(config_path, 'w', encoding='utf-8') as file:
-        json.dump(config, file, indent=4, ensure_ascii=False)
-
-config = read_config()
-
-# 从微信 API 获取访问令牌的函数
-def get_stable_token(AppID=config["wechat"]["AppID"], AppSecret=config["wechat"]["AppSecret"]):
-    """
-            获取微信 access_token。
-
-            Args:
-                AppID (str): 微信应用的 AppID。
-                AppSecret (str): 微信应用的 AppSecret。
-
-            Returns:
-                str: 获取到的 access_token。
-            """
-    url = "https://api.weixin.qq.com/cgi-bin/stable_token?"
-    data = \
-        {
-            "grant_type": "client_credential",
-            "appid": AppID,
-            "secret": AppSecret
-        }
-    data = json.dumps(data)
-    response = requests.post(url, data=data)
-
-    res = response.json()
-    print(res)
-    # 更新配置文件
-    access_token = res["access_token"]
-    config["wechat"]["access_token"] = access_token
-
-    updata_config()
-    return access_token
-
-
-# 获取天气信息
-def get_weather(location):
-    """
-        获取指定位置的天气信息。
-
-        参数:
-            location (str): 指定的位置信息。
-
-        返回:
-            dict: 包含天气信息的字典，包括以下键值对：
-                - 'link' (str): 天气信息的链接。
-                - 'date' (str): 日期。
-                - 'city' (str): 城市名称。
-                - 'temp' (dict): 包含温度信息的字典，包括 'today' 和 'now' 两个键值对，分别表示今天的最低和最高温度以及当前温度。
-                - 'wea' (dict): 包含天气状况信息的字典，包括 'now'、'day'、'night' 和 'text' 四个键值对，分别表示当前天气、白天天气、夜晚天气以及总体天气描述。
-                - 'win' (str): 风向和风力信息。
-                - 'sun_time' (dict): 包含日出和日落时间的字典，分别表示 'sunrise' 和 'sunset'。
-
-        异常:
-            - requests.exceptions.RequestException: 网络请求异常。
-            - json.JSONDecodeError: JSON解析异常。
-        """
-    city_id_url1 = r'https://restapi.amap.com/v3/geocode/geo?address={0}&key={1}'.format(location,
-                                                                                         config['weather']['gd_key'])
-    response_id = requests.get(city_id_url1)
-    data_id = response_id.json()
-    gd_cityid = data_id['geocodes'][0]['adcode']
-
-    # 高德
-    url1 = r'https://restapi.amap.com/v3/weather/weatherInfo?city={0}&key={1}'.format(
-        gd_cityid, config['weather']['gd_key'])
-    response1 = requests.get(url1)  # 发送请求获取天气信息
-    data1 = response1.json()
-    print(data1)
-
-    # 获取城市id
-    city_id_url2 = r'https://geoapi.qweather.com/v2/city/lookup?location={0}&key={1}'.format(
-        location, config['weather']['hf_key'])
-    response_id = requests.get(city_id_url2)
-    data_id = response_id.json()
-    hf_cityid = data_id['location'][0]['id']
-
-    url2 = r'https://devapi.qweather.com/v7/weather/3d?location={0}&key={1}'.format(
-        hf_cityid, config['weather']['hf_key'])
-    response2 = requests.get(url2)
-    data2 = response2.json()
-    print(data2)
-
-    # url3 = r'https://devapi.qweather.com/v7/weather/24h?location={0}&key={1}'.format(
-    #     hf_cityid, config['weather']['hf_key'])
-    # response3 = requests.get(url3)
-    # data3 = response3.json()
-    # print(data3)
-    # 城市
-    city = data1['lives'][0]['city']
-    # 温度
-    temp = {}
-    temp['today'] = data2['daily'][0]['tempMin'] + u'°C' + '~' + data2['daily'][0]['tempMax'] + u'°C'
-    temp['now'] = data1['lives'][0]['temperature'] + u'°C'
-    #
-    # 天气状况
-    weather = {}
-    weather['now'] = data1['lives'][0]['weather']
-    weather['day'] = data2['daily'][0]['textDay']
-    weather['night'] = data2['daily'][0]['textNight']
-    weather['text'] = u"今天白天有" + data2['daily'][0]['textDay'] + u"，" + u"夜晚有" + data2['daily'][0]['textNight']
-
-    # 风向
-    win = data1['lives'][0]['winddirection'] + u'风 ' + data1['lives'][0]['windpower'] + u'级'
-
-    # 日期
-    date = data2['daily'][0]['fxDate']
-
-    sum_time = {}
-    # 日出和日落时间
-    sum_time["sunrise"] = data2['daily'][0]['sunrise']
-    sum_time["sunset"] = data2['daily'][0]['sunset']
-
-    return {'link': data2['fxLink'], 'date': date, 'city': city, 'temp': temp, 'wea': weather, 'win': win,
-            "sun_time": sum_time}
-
-
-# 彩虹屁
-def get_rainbow():
-    """
-        获取彩虹屁。
-        Returns:
-            str: 彩虹屁文本。
-    """
-    url = 'https://v1.hitokoto.cn/'
-    response = requests.get(url)
-    data = response.json()
-    print(data["hitokoto"])
-    return data["hitokoto"]
-
-
-# 发送消息
-def send_message(touser, token, info, rainbow_text):
-    """
-        发送消息。
-        Args:
-            touser (str): 接收消息的用户 openid。
-            token (str): 微信 access_token。
-            info (dict): 包含天气信息的字典。
-            rainbow_text (str): 彩虹屁文本。
-    """
-    url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={0}'.format(token)
-    data = {
-        "touser": touser,
-        "template_id": config["template"]["template_id"],
-        "url": info['link'],
-        "topcolor": "#FF0000",
-        "data": {
-            "date": {
-                "value": info['date'],
-                "color": "#000"
-            },
-            "city": {
-                "value": info['city'],
-                "color": "#000"
-            },
-            "weather_text":{
-                "value": info['wea']['text'],
-                "color": "#000"
-            },
-            "weather_now": {
-                "value": info['wea']['now'],
-                "color": "#000"
-            },
-            "weather_day": {
-                "value": info['wea']['day'],
-                "color": "#000"
-            },
-            "weather_night": {
-                "value": info['wea']['night'],
-                "color": "#000"
-            },
-            "temprature_now": {
-                "value": info['temp']['now'],
-                "color": "#000"
-            },
-            "temprature_today": {
-                "value": info['temp']['today'],
-                "color": "#000"
-            },
-            "win": {
-                "value": info['win'],
-                "color": "#000"
-            },
-            "rainbow": {
-                "value": rainbow_text,
-                "color": "#000"
-            }
-        }
-    }
-    response = requests.post(url=url, data=json.dumps(data))
-    if response.json()['errmsg'] == 'ok':
-        print('\033[91m' + '推送成功' + '\033[0m')  # 输出红色文字
-    else:
-        print('\033[91m' + '推送失败' + '\033[0m')  # 输出红色文字
-
-
-if __name__ == '__main__':
-    #获取token,获取后会更新到配置文件中
-    get_stable_token(config["wechat"]["AppID"], config["wechat"]["AppSecret"])
-
-    # 从配置中获取token
-    token =  config["wechat"]["access_token"]
-    info = get_weather(location="北京")  # 获取天气信息 # 把这里的location改为自己城市名字
-    rainbow_text = get_rainbow()
-
-    # 要推送的用户
-    touser = config["template"]["touser"][0]
-    send_message(touser, token, info, rainbow_text)
-
-    # 推送给多个用户：用for循环即可
-    # 循环推送
-    # for i in touser:
-    #     send_message(i, token, info, rainbow_text)
-
-```
-
-
-
-
-
-
-
-
-
+本项目尚未添加 License。如计划开源使用，建议补充（例如 MIT）。
